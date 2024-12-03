@@ -5,6 +5,7 @@
       type="text"
       placeholder="search..."
       v-model="searchQuery"
+      image = 'search'
     ></my-input>
     <my-button color @click="openModal('createProduct', null)"
       >Create</my-button
@@ -25,14 +26,12 @@ const dataStore = useDataStore();
 let timeout = null;
 
 watch(searchQuery, (newQuery) => {
-  // Очистить предыдущий таймер, если запрос обновился быстрее
   if (timeout) {
     clearTimeout(timeout);
   }
 
-  // Установить новый таймер с задержкой 500ms
   timeout = setTimeout(async () => {
-    await dataStore.updatesearchQuery(newQuery); // Запрос на сервер с новым запросом
+    await dataStore.updatesearchQuery(newQuery);
   }, 500);
 });
 

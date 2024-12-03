@@ -5,10 +5,9 @@ import router from '../router';
 
 export const useDataStore = defineStore('data', () => {
     // State
+    const isLoading = ref(false);
     const data = ref(null);
     const error = ref(null);
-    const isLoading = ref(false);
-
     let currentPage = ref(1);
     let limit = ref(10);
     let searchQuery = ref(null);
@@ -22,7 +21,6 @@ export const useDataStore = defineStore('data', () => {
     }
 
     // Actions
-
     const logOut = () => {
         localStorage.clear();
         router.push('/login');
@@ -34,11 +32,9 @@ export const useDataStore = defineStore('data', () => {
         try {
             const response = await axiosInstance.post('/login', { 'username': payload });
             if (response.status === 200) {
-                await Promise.all([
-                    localStorage.setItem('access_token', response.data.access_token),
-                    localStorage.setItem('userName', payload)
-                ]);
-                await router.push('/products')
+                localStorage.setItem('access_token', response.data.access_token);
+                localStorage.setItem('userName', payload);
+                router.push('/products');
             } else {
                 error.value = response.data;
             }
@@ -49,20 +45,6 @@ export const useDataStore = defineStore('data', () => {
             isLoading.value = false;
         }
     };
-
-    const getItemscount = async () => {
-        isLoading.value = true;
-        try {
-            const response = await axiosInstance.get('/products', { headers });
-            if (response.status === 200) {
-                itemsCount.value = response.data.length;
-            }
-        } catch {
-            error.value = err.message || 'Ошибка при отправке данных';
-        } finally {
-            isLoading.value = false;
-        }
-    }
 
     const getProducts = async () => {
         isLoading.value = true;
@@ -76,9 +58,9 @@ export const useDataStore = defineStore('data', () => {
             const response = await axiosInstance.get('/products', { headers, params });
             if (response.status === 200) {
                 data.value = response.data;
-                getItemscount();
+                getItemsCount();
                 console.log(response.data);
-                
+
             } else {
                 error.value = response.data;
             }
@@ -90,26 +72,19 @@ export const useDataStore = defineStore('data', () => {
         }
     };
 
-
-    // const getProduct = async (id) => {
-    //     isLoading.value = true;
-    //     error.value = null;
-    //     iterableProduct.value = null;
-    //     try {
-    //         const response = await axiosInstance.get(`/products/${id}`, { headers });
-    //         if (response.status === 200) {
-    //             iterableProduct.value = response.data;
-    //         } else {
-    //             error.value = response.data;
-    //         }
-    //     } catch (err) {
-    //         error.value = err.message || 'Ошибка при отправке данных';
-    //         console.log(err);
-    //     } finally {
-    //         isLoading.value = false;
-    //     }
-    // };
-
+    const getItemsCount = async () => {
+        isLoading.value = true;
+        try {
+            const response = await axiosInstance.get('/products', { headers });
+            if (response.status === 200) {
+                itemsCount.value = response.data.length;
+            }
+        } catch {
+            error.value = err.message || 'Ошибка при отправке данных';
+        } finally {
+            isLoading.value = false;
+        }
+    };
 
     const createProduct = async (payload) => {
         isLoading.value = true;
@@ -165,7 +140,6 @@ export const useDataStore = defineStore('data', () => {
         }
     }
 
-
     const updatePagination = ({ count, page }) => {
         if (count) {
             limit.value = count;
@@ -186,11 +160,9 @@ export const useDataStore = defineStore('data', () => {
         data,
         error,
         isLoading,
-        // iterableProduct,
         logOut,
         logIn,
         getProducts,
-        // getProduct,
         createProduct,
         updateProduct,
         deleteProduct,
