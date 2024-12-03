@@ -2,28 +2,57 @@
   <div class="products">
     <ul class="products__list">
       <li class="products__list--item">
-        <div class="product-card title">Name</div>
-        <div class="product-card title">Price</div>
-        <div class="product-card title">Date added</div>
+        <div class="product-card title">
+          Name
+          <my-sort-button
+            :is-active="activeSort === 'name'"
+            :direction="sortDirections.name"
+            name = 'name'
+            @click="console.log(activeSort === 'name', sortDirections.name)"
+            @apply-sorting="applySorting('name')"
+          >
+          </my-sort-button>
+        </div>
+        <div class="product-card title">
+          Price
+          <my-sort-button
+            :is-active="activeSort === 'price'"
+            :direction="sortDirections.price"
+            name = 'price'
+            @click="console.log(activeSort === 'price', sortDirections.price)"
+            @apply-sorting="applySorting('price')"
+            >
+          </my-sort-button>
+        </div>
+        <div class="product-card title">
+          Date added
+          <my-sort-button
+          :is-active="activeSort === 'date'"
+          :direction="sortDirections.date"
+          name = 'date'
+            @apply-sorting="applySorting('date')"
+          >
+          </my-sort-button>
+        </div>
         <div class="product-card title"></div>
       </li>
-      <li
-        class="products__list--item"
-        v-for="product in products"
-        :key="product.id"
-      >
-        <div class="product-card">{{ product.name }}</div>
-        <div class="product-card">{{ product.price }}</div>
-        <div class="product-card">
-          {{ formatDate(product.created_at) }}
-        </div>
-        <my-button
-          class="product-card button"
-          color
-          @click="openModal('updateProduct', product)"
-          >Edit</my-button
+      <transition-group name="list">
+        <li
+          class="products__list--item"
+          v-for="product in products"
+          :key="product.id"
         >
-      </li>
+          <div class="product-card">{{ product.name }}</div>
+          <div class="product-card">{{ product.price }}</div>
+          <div class="product-card">{{ formatDate(product.created_at) }}</div>
+          <my-button
+            class="product-card button"
+            color
+            @click="openModal('updateProduct', product)"
+            >Edit</my-button
+          >
+        </li>
+      </transition-group>
     </ul>
   </div>
 </template>
@@ -33,6 +62,7 @@ import { computed } from "vue";
 import { useDataStore } from "@/store/index";
 import { eventBus } from "@/eventBus";
 import MyButton from "@/components/UI/MyButton.vue";
+import MySortButton from "@/components/UI/MySortButton.vue";
 
 const dataStore = useDataStore();
 
@@ -48,15 +78,23 @@ const formatDate = (dateString) => {
   return `${day}.${month}.${year}`;
 };
 
+const applySorting = (type) => {
+  dataStore.setSortedData(type);
+};
+
 const products = computed(() => dataStore.filteredData);
+const sortDirections = computed(() => dataStore.sortDirections);
+const activeSort = computed(() => dataStore.activeSort);
 </script>
 
 <style lang="scss" scoped>
 .products {
   @include flex-center;
+  align-items: flex-start;
   width: 100%;
   height: 100%;
   padding: $padding-small;
+  flex-grow: 1;
 
   &__list {
     width: 100%;
@@ -78,5 +116,9 @@ const products = computed(() => dataStore.filteredData);
 
 .product-card {
   align-self: center;
+}
+
+.list-move {
+  transition: transform 0.3s ease;
 }
 </style>

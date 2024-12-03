@@ -9,13 +9,11 @@ export const useDataStore = defineStore('data', () => {
     const data = ref(null);
     const filteredData = ref(null)
     const error = ref(null);
-    const isLoading = ref(false);
     let currentPage = ref(1);
-    let limit = ref(10);
     let searchQuery = ref(null);
-    let skip = ref(null);
-    let itemsCount = ref(1);
-    let totalPages = computed(() => Math.ceil(itemsCount.value / limit.value));
+    let limit = ref(10);
+    let totalItems = ref(null);
+    let totalPages = ref(null);
 
     const headers = {
         'Content-Type': 'application/json',
@@ -23,16 +21,6 @@ export const useDataStore = defineStore('data', () => {
     }
 
     // Actions
-
-    const setFilteredData = (query) => {
-        if (query) {
-            filteredData.value = data.value.filter(item =>
-                item.name.toLowerCase().includes(query.toLowerCase())
-            );
-        } else {
-            filteredData.value = data.value;
-        }
-    };
 
     const logOut = () => {
         localStorage.clear();
@@ -63,16 +51,17 @@ export const useDataStore = defineStore('data', () => {
         isLoading.value = true;
         error.value = null;
         const params = {
-            skip: skip.value ? skip.value : null,
             limit: limit.value ? limit.value : null,
+            page: currentPage.value ? currentPage.value : null,
             search: searchQuery.value ? searchQuery.value : null,
         };
         try {
             const response = await axiosInstance.get('/products', { headers, params });
             if (response.status === 200) {
-                data.value = response.data;
+                data.value = response.data.items;
+                totalItems.value = response.data.total_items;
+                totalPages.value = response.data.total_pages;
                 filteredData.value = data.value;
-                getItemscount();
                 console.log(response.data);
 
             } else {
@@ -115,7 +104,7 @@ export const useDataStore = defineStore('data', () => {
                 error.value = response.data;
             }
         } catch (err) {
-            error.value = err.message || 'Ошибка при отправке данных';
+            error.value = err.response.data.detail[0].msg || 'Ошибка при отправке данных';
             console.log(err);
         } finally {
             isLoading.value = false;
@@ -142,19 +131,58 @@ export const useDataStore = defineStore('data', () => {
 
     const updatePagination = ({ count, page }) => {
         if (count) {
+            let newPage = Math.ceil((currentPage.value * limit.value) / count);
             limit.value = count;
-            currentPage.value = 1;
-            skip.value = 0;
+            currentPage.value = newPage;
         };
-        if (page) skip.value = ((page - 1) * limit.value);
         if (page) currentPage.value = (page);
         getProducts();
     }
 
-    const updatesearchQuery = (newQuery) => {
-        searchQuery.value = newQuery;
-        getProducts();
-    }
+    const setFilteredData = (query) => {
+        if (query) {
+            filteredData.value = data.value.filter(item =>
+                item.name.toLowerCase().includes(query.toLowerCase())
+            );
+        } else {
+            filteredData.value = data.value;
+        }
+    };
+
+    const sortDirections = {
+        name: 1,
+        price: 1,
+        date: 1
+    };
+    const activeSort = ref(null);
+
+    const setSortedData = (type) => {
+        if (activeSort.value === type) {
+            sortDirections[type] = sortDirections[type] === 1 ? -1 : 1;
+        } else {
+            activeSort.value = type;
+        }
+
+        switch (type) {
+            case "name":
+                filteredData.value = [...data.value].sort((a, b) => {
+                    return sortDirections[type] * a.name.localeCompare(b.name);
+                });
+                break;
+            case "price":
+                filteredData.value = [...data.value].sort((a, b) => {
+                    return sortDirections[type] * (a.price - b.price);
+                });
+                break;
+            case "date":
+                filteredData.value = [...data.value].sort((a, b) => {
+                    return sortDirections[type] * a.created_at.localeCompare(b.created_at);
+                });
+                break;
+            default:
+                filteredData.value = [...data.value];
+        }
+    };
 
     return {
         data,
@@ -172,7 +200,10 @@ export const useDataStore = defineStore('data', () => {
         updateProduct,
         deleteProduct,
         updatePagination,
-        updatesearchQuery,
-        setFilteredData
+        // updateSearchQuery,
+        setFilteredData,
+        setSortedData,
+        activeSort,
+        sortDirections
     };
 });

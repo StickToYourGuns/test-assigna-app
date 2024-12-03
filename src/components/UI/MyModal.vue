@@ -1,5 +1,6 @@
 <template>
   <div class="modal" v-if="isVisible" @click="closeModal">
+    <my-alert style="position: absolute; top: 0"></my-alert>
     <div @click.stop class="modal__container">
       <component :is="modalSelect" :productObject="productObject"/>
     </div>
@@ -11,6 +12,7 @@ import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { eventBus } from "@/eventBus";
 import FormCreateProduct from "@/components/FormCreateProduct.vue";
 import FormUpdateProduct from "@/components/FormUpdateProduct.vue";
+import MyAlert from "@/components/UI/MyAlert.vue";
 
 const isVisible = ref(false);
 const modalType = ref("");

@@ -2,7 +2,7 @@
   <div class="pagination">
     <my-dropdown
       :values="limits"
-      :display="dataStore.limit"
+      :display="limit"
       @selectDropdownValue="selectDropdownValue"
     ></my-dropdown>
     <div class="pagination__container">
@@ -26,8 +26,9 @@ import { ref, computed } from "vue";
 import { useDataStore } from "@/store/index";
 import MyDropdown from "@/components/UI/MyDropdown.vue";
 
-const dataStore = useDataStore();
 const limits = ref([10, 50, 100]);
+
+const dataStore = useDataStore();
 
 const selectDropdownValue = (count) => {
   dataStore.updatePagination({count});
@@ -37,6 +38,8 @@ const changePage = (page) => {
   dataStore.updatePagination({page});
 }
 
+
+const limit = computed(() => dataStore.limit);
 const totalPages = computed(() => dataStore.totalPages);
 const currentPage = computed(() => dataStore.currentPage);
 </script>

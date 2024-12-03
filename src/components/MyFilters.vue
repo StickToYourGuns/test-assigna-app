@@ -29,7 +29,6 @@ watch(searchQuery, (newQuery) => {
   if (timeout) {
     clearTimeout(timeout);
   }
-
   timeout = setTimeout(async () => {
     await dataStore.setFilteredData(newQuery);
   }, 500);

@@ -12,6 +12,7 @@
         v-model="productPrice"
         id="productPrice"
         :placeholder="productObject.price"
+        image = 'edit'
       ></my-input>
     </div>
     <div class="product-form--buttons">
@@ -31,8 +32,9 @@
 </template>
   
   <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useDataStore } from "@/store/index";
+import { eventBus } from "@/eventBus";
 const props = defineProps({
   productObject: {
     type: Object,
@@ -41,12 +43,12 @@ const props = defineProps({
 
 import MyInput from "@/components/UI/MyInput.vue";
 import MyButton from "@/components/UI/MyButton.vue";
-import { eventBus } from "@/eventBus";
 
-const dataStore = useDataStore();и
+const dataStore = useDataStore();
 const productName = ref("");
 const productPrice = ref("");
 const deleteConfirmation = ref(false)
+const error = computed(() => dataStore.error)
 
 const handleConfirmation = () => deleteConfirmation.value = !deleteConfirmation.value;;
 
@@ -64,10 +66,11 @@ const handleSubmit = (id) => {
     },
     id
   );
-  console.log(props.productObject);
-  productName.value = "";
-  productPrice.value = "";
-  closeModal();
+  if (!error.value) {
+    productName.value = "";
+    productPrice.value = "";
+    closeModal();
+  }
 };
 
 const closeModal = () => {

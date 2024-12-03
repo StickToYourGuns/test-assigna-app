@@ -48,5 +48,6 @@ onMounted(() => {
   border-radius: $radius-mini;
   background-color: $white-color;
   box-shadow: $mini-shadow;
+  flex-grow: 1;
 }
 </style>
