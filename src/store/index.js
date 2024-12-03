@@ -5,6 +5,7 @@ import router from '../router';
 
 export const useDataStore = defineStore('data', () => {
     // State
+    const isLoading = ref(false);
     const data = ref(null);
     const filteredData = ref(null)
     const error = ref(null);
@@ -44,11 +45,9 @@ export const useDataStore = defineStore('data', () => {
         try {
             const response = await axiosInstance.post('/login', { 'username': payload });
             if (response.status === 200) {
-                await Promise.all([
-                    localStorage.setItem('access_token', response.data.access_token),
-                    localStorage.setItem('userName', payload)
-                ]);
-                await router.push('/products')
+                localStorage.setItem('access_token', response.data.access_token);
+                localStorage.setItem('userName', payload);
+                router.push('/products');
             } else {
                 error.value = response.data;
             }
@@ -59,20 +58,6 @@ export const useDataStore = defineStore('data', () => {
             isLoading.value = false;
         }
     };
-
-    const getItemscount = async () => {
-        isLoading.value = true;
-        try {
-            const response = await axiosInstance.get('/products', { headers });
-            if (response.status === 200) {
-                itemsCount.value = response.data.length;
-            }
-        } catch {
-            error.value = err.message || 'Ошибка при отправке данных';
-        } finally {
-            isLoading.value = false;
-        }
-    }
 
     const getProducts = async () => {
         isLoading.value = true;
@@ -154,7 +139,6 @@ export const useDataStore = defineStore('data', () => {
             isLoading.value = false;
         }
     }
-
 
     const updatePagination = ({ count, page }) => {
         if (count) {

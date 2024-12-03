@@ -6,6 +6,7 @@
         v-model="productName"
         id="productName"
         :placeholder="productObject.name"
+        image = 'edit'
       ></my-input>
       <my-input
         v-model="productPrice"
@@ -42,7 +43,7 @@ import MyInput from "@/components/UI/MyInput.vue";
 import MyButton from "@/components/UI/MyButton.vue";
 import { eventBus } from "@/eventBus";
 
-const dataStore = useDataStore();
+const dataStore = useDataStore();и
 const productName = ref("");
 const productPrice = ref("");
 const deleteConfirmation = ref(false)

@@ -5,6 +5,7 @@
       type="text"
       placeholder="search..."
       v-model="searchQuery"
+      image = 'search'
     ></my-input>
     <my-button color @click="openModal('createProduct', null)"
       >Create</my-button
