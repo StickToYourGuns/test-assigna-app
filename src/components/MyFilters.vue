@@ -19,25 +19,23 @@ import { eventBus } from "@/eventBus";
 import MyInput from "@/components/UI/MyInput.vue";
 import MyButton from "@/components/UI/MyButton.vue";
 
-const searchQuery = ref('');
+const searchQuery = ref("");
 const dataStore = useDataStore();
 
 let timeout = null;
 
 watch(searchQuery, (newQuery) => {
-  // Очистить предыдущий таймер, если запрос обновился быстрее
   if (timeout) {
     clearTimeout(timeout);
   }
 
-  // Установить новый таймер с задержкой 500ms
   timeout = setTimeout(async () => {
-    await dataStore.updatesearchQuery(newQuery); // Запрос на сервер с новым запросом
+    await dataStore.setFilteredData(newQuery);
   }, 500);
 });
 
 const openModal = (type) => {
-  eventBus.emit("openModal", {type});
+  eventBus.emit("openModal", { type });
 };
 </script>
 

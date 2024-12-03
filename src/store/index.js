@@ -6,9 +6,9 @@ import router from '../router';
 export const useDataStore = defineStore('data', () => {
     // State
     const data = ref(null);
+    const filteredData = ref(null)
     const error = ref(null);
     const isLoading = ref(false);
-
     let currentPage = ref(1);
     let limit = ref(10);
     let searchQuery = ref(null);
@@ -22,6 +22,16 @@ export const useDataStore = defineStore('data', () => {
     }
 
     // Actions
+
+    const setFilteredData = (query) => {
+        if (query) {
+            filteredData.value = data.value.filter(item =>
+                item.name.toLowerCase().includes(query.toLowerCase())
+            );
+        } else {
+            filteredData.value = data.value;
+        }
+    };
 
     const logOut = () => {
         localStorage.clear();
@@ -76,9 +86,10 @@ export const useDataStore = defineStore('data', () => {
             const response = await axiosInstance.get('/products', { headers, params });
             if (response.status === 200) {
                 data.value = response.data;
+                filteredData.value = data.value;
                 getItemscount();
                 console.log(response.data);
-                
+
             } else {
                 error.value = response.data;
             }
@@ -89,27 +100,6 @@ export const useDataStore = defineStore('data', () => {
             isLoading.value = false;
         }
     };
-
-
-    // const getProduct = async (id) => {
-    //     isLoading.value = true;
-    //     error.value = null;
-    //     iterableProduct.value = null;
-    //     try {
-    //         const response = await axiosInstance.get(`/products/${id}`, { headers });
-    //         if (response.status === 200) {
-    //             iterableProduct.value = response.data;
-    //         } else {
-    //             error.value = response.data;
-    //         }
-    //     } catch (err) {
-    //         error.value = err.message || 'Ошибка при отправке данных';
-    //         console.log(err);
-    //     } finally {
-    //         isLoading.value = false;
-    //     }
-    // };
-
 
     const createProduct = async (payload) => {
         isLoading.value = true;
@@ -184,21 +174,21 @@ export const useDataStore = defineStore('data', () => {
 
     return {
         data,
+        filteredData,
         error,
         isLoading,
-        // iterableProduct,
-        logOut,
-        logIn,
-        getProducts,
-        // getProduct,
-        createProduct,
-        updateProduct,
-        deleteProduct,
         currentPage,
         limit,
         searchQuery,
         totalPages,
+        logOut,
+        logIn,
+        getProducts,
+        createProduct,
+        updateProduct,
+        deleteProduct,
         updatePagination,
-        updatesearchQuery
+        updatesearchQuery,
+        setFilteredData
     };
 });

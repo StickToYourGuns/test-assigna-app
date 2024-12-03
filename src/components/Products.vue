@@ -1,12 +1,28 @@
 <template>
   <div class="products">
     <ul class="products__list">
-      <li class="products__list--item"><div>Name</div><div>Price</div><div>Date added</div></li>
-      <li class="products__list--item" v-for="product in products" :key="product.id">
-        <div class="product-card name">{{ product.name }}</div>
-        <div class="product-card price">{{ product.price }}</div>
-        <div class="product-card created">{{ formatDate(product.created_at) }}</div>
-        <my-button class="product-card button" color @click="openModal('updateProduct', product)">Edit</my-button>
+      <li class="products__list--item">
+        <div class="product-card title">Name</div>
+        <div class="product-card title">Price</div>
+        <div class="product-card title">Date added</div>
+        <div class="product-card title"></div>
+      </li>
+      <li
+        class="products__list--item"
+        v-for="product in products"
+        :key="product.id"
+      >
+        <div class="product-card">{{ product.name }}</div>
+        <div class="product-card">{{ product.price }}</div>
+        <div class="product-card">
+          {{ formatDate(product.created_at) }}
+        </div>
+        <my-button
+          class="product-card button"
+          color
+          @click="openModal('updateProduct', product)"
+          >Edit</my-button
+        >
       </li>
     </ul>
   </div>
@@ -21,7 +37,7 @@ import MyButton from "@/components/UI/MyButton.vue";
 const dataStore = useDataStore();
 
 const openModal = (type, product) => {
-  eventBus.emit("openModal", {type, product});
+  eventBus.emit("openModal", { type, product });
 };
 
 const formatDate = (dateString) => {
@@ -32,7 +48,7 @@ const formatDate = (dateString) => {
   return `${day}.${month}.${year}`;
 };
 
-const products = computed(() => dataStore.data);
+const products = computed(() => dataStore.filteredData);
 </script>
 
 <style lang="scss" scoped>
@@ -47,13 +63,10 @@ const products = computed(() => dataStore.data);
     height: 100%;
     list-style: none;
     gap: 5px;
-
     display: grid;
-
-
     &--item {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-template-columns: 2fr 1fr 1fr 100px;
       box-shadow: $mini-shadow;
       height: 40px;
       align-content: center;
@@ -65,9 +78,5 @@ const products = computed(() => dataStore.data);
 
 .product-card {
   align-self: center;
-
-  &.button{
-    justify-self: end;
-  }
 }
 </style>
