@@ -1,11 +1,13 @@
 <template>
-  <img :class="{ active: isActive, reversed: (isActive && direction === 1) }" @click="$emit('applySorting')"
-    src="@/assets/filter-arrow.svg" alt="Sort Button" />
+  <img
+    :class="{ active: isActive, reversed: isActive && direction === 1 }"
+    @click="$emit('applySorting')"
+    src="@/assets/filter-arrow.svg"
+    alt="Sort Button"
+  />
 </template>
 
 <script setup>
-import { useDataStore } from "@/store/index";
-
 const props = defineProps({
   isActive: {
     type: Boolean,

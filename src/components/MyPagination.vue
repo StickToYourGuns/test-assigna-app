@@ -1,12 +1,21 @@
 <template>
   <div class="pagination">
-    <my-dropdown :values="limits" :display="limit" @selectDropdownValue="selectDropdownValue"></my-dropdown>
+    <my-dropdown
+      :values="limits"
+      :display="limit"
+      @selectDropdownValue="selectDropdownValue"
+    ></my-dropdown>
     <div class="pagination__container">
-      <div v-for="item in visiblePages" :key="item" :class="{
-        'pagination__container--element': true,
-        curentPage: item === currentPage,
-        dots: item === '...'
-      }" @click="item !== '...' && changePage(item)">
+      <div
+        v-for="item in visiblePages"
+        :key="item"
+        :class="{
+          'pagination__container--element': true,
+          curentPage: item === currentPage,
+          dots: item === '...',
+        }"
+        @click="item !== '...' && changePage(item)"
+      >
         {{ item }}
       </div>
     </div>
@@ -28,13 +37,11 @@ const selectDropdownValue = (count) => {
 
 const changePage = (page) => {
   dataStore.updatePagination({ page });
-}
-
+};
 
 const limit = computed(() => dataStore.limit);
 const totalPages = computed(() => dataStore.totalPages);
 const currentPage = computed(() => dataStore.currentPage);
-
 
 const visiblePages = computed(() => {
   const pages = [];
@@ -47,7 +54,7 @@ const visiblePages = computed(() => {
   } else {
     pages.push(1);
     if (currentPage.value > 3) {
-      pages.push('...');
+      pages.push("...");
     }
     const start = Math.max(2, currentPage.value - 1);
     const end = Math.min(maxPages - 1, currentPage.value + 1);
@@ -55,7 +62,7 @@ const visiblePages = computed(() => {
       pages.push(i);
     }
     if (currentPage.value < maxPages - 2) {
-      pages.push('...');
+      pages.push("...");
     }
     pages.push(maxPages);
   }

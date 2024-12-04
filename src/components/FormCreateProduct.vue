@@ -1,5 +1,5 @@
 <template>
-  <form @click.prevent class="product-form">
+  <form @click.prevent class="product-form" autocomplete="off">
     <h2 class="product-form--header">Create product</h2>
     <div class="product-form__content">
       <my-input
@@ -11,6 +11,7 @@
         v-model="productPrice"
         id="productPrice"
         placeholder="Price"
+        type="number"
       ></my-input>
     </div>
     <div class="product-form--buttons">
@@ -20,7 +21,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useDataStore } from "@/store/index";
 import { eventBus } from "@/eventBus";
 
@@ -30,15 +31,22 @@ import MyButton from "@/components/UI/MyButton.vue";
 const dataStore = useDataStore();
 const productName = ref("");
 const productPrice = ref("");
+const error = computed(() => dataStore.error);
 
-const handleSubmit = () => {
-  dataStore.createProduct({
-    name: productName.value,
-    price: +productPrice.value,
-  });
-  productName.value = '';
-  productPrice.value = '';
-  closeModal();
+const handleSubmit = async () => {
+  if (productName.value && productPrice.value) {
+    await dataStore.createProduct({
+      name: productName.value,
+      price: productPrice.value,
+    });
+    if (!error.value) {
+      productName.value = "";
+      productPrice.value = "";
+      closeModal();
+    }
+  } else {
+    dataStore.handleError("Fill in both fields");
+  }
 };
 
 const closeModal = () => {
@@ -63,12 +71,6 @@ const closeModal = () => {
     flex-direction: column;
     gap: 30px;
     width: 100%;
-  }
-  &--header {
-
-  }
-  &--buttons{
-
   }
 }
 </style>

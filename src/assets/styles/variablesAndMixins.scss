@@ -1,10 +1,9 @@
-// Mixins
-@mixin flex-center{
+@mixin flex-center {
     display: flex;
     justify-content: center;
     align-items: center;
 }
-// Цвета
+
 $primary-color: #bbd0ff;
 $secondary-color: #ffd6ff;
 $background-color: #fff7fd;
@@ -14,12 +13,10 @@ $other-color2: #c8b6ff;
 $other-color3: #b8c0ff;
 $text-color: #333;
 
-// Отступы
 $padding-mini: 10px;
 $padding-small: 20px;
 $padding-large: 30px;
 
-//Сякое
 $radius-default: 20px;
 $radius-mini: 10px;
 $main-shadow: 4px 4px 20px rgba(0, 0, 0, 0.2);

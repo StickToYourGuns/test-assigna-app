@@ -37,4 +37,8 @@ router.beforeEach((to, from, next) => {
     }
 });
 
+router.onError((error) => {
+    console.error('Routing error:', error);
+});
+
 export default router;

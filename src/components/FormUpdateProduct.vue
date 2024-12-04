@@ -1,16 +1,37 @@
 <template>
-  <form class="product-form">
+  <form class="product-form" autocomplete="off">
     <h2 class="product-form--header">Update product</h2>
     <div class="product-form__content">
-      <my-input v-model="productName" id="productName" :placeholder="productObject.name" image='edit'></my-input>
-      <my-input v-model="productPrice" id="productPrice" :placeholder="productObject.price" image='edit'></my-input>
+      <my-input
+        v-model="productName"
+        id="productName"
+        :placeholder="productObject.name"
+        image="edit"
+      ></my-input>
+      <my-input
+        v-model="productPrice"
+        id="productPrice"
+        type="number"
+        :placeholder="productObject.price"
+        image="edit"
+      ></my-input>
     </div>
     <div class="product-form--buttons">
       <my-button @click.prevent="handleConfirmation()">Delete</my-button>
-      <my-button v-show="deleteConfirmation"
-        style="position: absolute; background-color: #333; color: white; z-index: 10;"
-        @click.prevent="handleDelete(productObject.id)">Are you sure?</my-button>
-      <my-button @click.prevent="handleSubmit(productObject.id)" color>Update</my-button>
+      <my-button
+        v-show="deleteConfirmation"
+        style="
+          position: absolute;
+          background-color: #333;
+          color: white;
+          z-index: 10;
+        "
+        @click.prevent="handleDelete(productObject.id)"
+        >Are you sure?</my-button
+      >
+      <my-button @click.prevent="handleSubmit(productObject.id)" color
+        >Update</my-button
+      >
     </div>
   </form>
 </template>
@@ -31,14 +52,13 @@ import MyButton from "@/components/UI/MyButton.vue";
 const dataStore = useDataStore();
 const productName = ref("");
 const productPrice = ref("");
-const deleteConfirmation = ref(false)
-const error = computed(() => dataStore.error)
+const deleteConfirmation = ref(false);
+const error = computed(() => dataStore.error);
 
 const handleConfirmation = () => {
   deleteConfirmation.value = true;
-  setTimeout(() => deleteConfirmation.value = false, 3000)
-}
-
+  setTimeout(() => (deleteConfirmation.value = false), 3000);
+};
 
 const handleDelete = (id) => {
   dataStore.deleteProduct(id);
@@ -60,7 +80,7 @@ const handleSubmit = async (id) => {
       closeModal();
     }
   } else {
-    dataStore.handleError('Введите хоть что-нибудь');
+    dataStore.handleError("Edit something");
   }
 };
 
@@ -88,8 +108,6 @@ const closeModal = () => {
     gap: 30px;
     width: 100%;
   }
-
-  &--header {}
 
   &--buttons {
     display: flex;

@@ -1,7 +1,15 @@
 <template>
   <div class="filters">
-    <my-input style="width: 100px" type="text" placeholder="search..." v-model="searchQuery" image='search'></my-input>
-    <my-button color @click="openModal('createProduct', null)">Create</my-button>
+    <my-input
+      style="width: 100px"
+      type="text"
+      placeholder="search..."
+      v-model="searchQuery"
+      image="search"
+    ></my-input>
+    <my-button color @click="openModal('createProduct', null)"
+      >Create</my-button
+    >
   </div>
 </template>
 

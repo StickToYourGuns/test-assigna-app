@@ -4,7 +4,7 @@ import axiosInstance from '@/axios.js';
 import router from '../router';
 
 export const useDataStore = defineStore('data', () => {
-    // State
+
     const isLoading = ref(false);
     const data = ref(null);
     const filteredData = ref(null)
@@ -14,13 +14,6 @@ export const useDataStore = defineStore('data', () => {
     let limit = ref(10);
     let totalItems = ref(null);
     let totalPages = ref(null);
-
-    const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-    }
-
-    // Actions
 
     const logOut = () => {
         localStorage.clear();
@@ -35,26 +28,34 @@ export const useDataStore = defineStore('data', () => {
             if (response.status === 200) {
                 localStorage.setItem('access_token', response.data.access_token);
                 localStorage.setItem('userName', payload);
-                router.push('/products');
+                await router.push('/products');
             } else {
                 handleError(response.data);
             }
         } catch (err) {
-            handleError(err.message) || 'Ошибка при отправке данных';
+            handleError(err.message);
             console.log(err);
         } finally {
             isLoading.value = false;
         }
     };
 
+    const getHeaders = () => ({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+    });
+
+    const getParams = () => ({
+        'limit': limit.value ? limit.value : null,
+        'page': currentPage.value ? currentPage.value : null,
+        'search': searchQuery.value ? searchQuery.value : null,
+    })
+
     const getProducts = async () => {
         isLoading.value = true;
         error.value = null;
-        const params = {
-            limit: limit.value ? limit.value : null,
-            page: currentPage.value ? currentPage.value : null,
-            search: searchQuery.value ? searchQuery.value : null,
-        };
+        const params = getParams();
+        const headers = getHeaders();
         try {
             const response = await axiosInstance.get('/products', { headers, params });
             if (response.status === 200) {
@@ -62,13 +63,16 @@ export const useDataStore = defineStore('data', () => {
                 totalItems.value = response.data.total_items;
                 totalPages.value = response.data.total_pages;
                 filteredData.value = data.value;
+                console.log(data.value);
+
             } else {
                 handleError(response.data);
             }
         } catch (err) {
-            handleError(err.message) || 'Ошибка при отправке данных';
+            handleError(err.message);
             console.log(err);
         } finally {
+            console.log('sended', { headers, params });
             isLoading.value = false;
         }
     };
@@ -76,6 +80,7 @@ export const useDataStore = defineStore('data', () => {
     const createProduct = async (payload) => {
         isLoading.value = true;
         error.value = null;
+        const headers = getHeaders();
         try {
             const response = await axiosInstance.post('/products', payload, { headers });
             if (response.status === 200) {
@@ -84,8 +89,7 @@ export const useDataStore = defineStore('data', () => {
                 handleError(response.data);
             }
         } catch (err) {
-            handleError(err.message) || 'Ошибка при отправке данных';
-            console.log(err);
+            handleError(err.response.data.detail[0].msg);
         } finally {
             isLoading.value = false;
         }
@@ -94,6 +98,7 @@ export const useDataStore = defineStore('data', () => {
     const updateProduct = async (payload, id) => {
         isLoading.value = true;
         error.value = null;
+        const headers = getHeaders();
         try {
             const response = await axiosInstance.put(`/products/${id}`, payload, { headers });
             if (response.status === 200) {
@@ -102,7 +107,7 @@ export const useDataStore = defineStore('data', () => {
                 handleError(response.data);
             }
         } catch (err) {
-            handleError(err.response.data.detail[0].msg) || 'Ошибка при отправке данных';
+            handleError(err.response.data.detail[0].msg);
             console.log(error.value);
         } finally {
             isLoading.value = false;
@@ -112,6 +117,7 @@ export const useDataStore = defineStore('data', () => {
     const deleteProduct = async (id) => {
         isLoading.value = true;
         error.value = null;
+        const headers = getHeaders();
         try {
             const response = await axiosInstance.delete(`/products/${id}`, { headers });
             if (response.status === 200) {
@@ -156,38 +162,39 @@ export const useDataStore = defineStore('data', () => {
 
     const setSortedData = (type) => {
         if (activeSort.value === type) {
-            sortDirections[type] = sortDirections[type] === 1 ? -1 : 1;
+            sortDirections[type] = -sortDirections[type];
         } else {
             activeSort.value = type;
+            sortDirections[type] = 1;
         }
 
-        switch (type) {
-            case "name":
-                filteredData.value = [...data.value].sort((a, b) => {
+        filteredData.value = [...data.value].sort((a, b) => {
+            switch (type) {
+                case "name":
                     return sortDirections[type] * a.name.localeCompare(b.name);
-                });
-                break;
-            case "price":
-                filteredData.value = [...data.value].sort((a, b) => {
+                case "price":
                     return sortDirections[type] * (a.price - b.price);
-                });
-                break;
-            case "date":
-                filteredData.value = [...data.value].sort((a, b) => {
+                case "date":
                     return sortDirections[type] * a.created_at.localeCompare(b.created_at);
-                });
-                break;
-            default:
-                filteredData.value = [...data.value];
-        }
+                default:
+                    return 0;
+            }
+        });
     };
 
+    let timeoutId = null;
+
     const handleError = (errorMessage) => {
-        console.log(errorMessage);
-        
-        error.value = errorMessage
-        setTimeout(() => error.value = null, 3000);
-    }
+        error.value = errorMessage || 'Unknown error occurred';
+
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+
+        timeoutId = setTimeout(() => {
+            error.value = null;
+        }, 3000);
+    };
 
     return {
         data,
@@ -198,6 +205,9 @@ export const useDataStore = defineStore('data', () => {
         limit,
         searchQuery,
         totalPages,
+        totalItems,
+        activeSort,
+        sortDirections,
         logOut,
         logIn,
         getProducts,
@@ -208,7 +218,5 @@ export const useDataStore = defineStore('data', () => {
         setFilteredData,
         setSortedData,
         handleError,
-        activeSort,
-        sortDirections
     };
 });

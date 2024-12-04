@@ -7,8 +7,6 @@
 
 <script setup>
 import UserInfo from "@/components/UserInfo.vue";
-
-
 </script>
 
 <style lang="scss" scoped>

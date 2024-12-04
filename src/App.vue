@@ -1,13 +1,9 @@
 <template>
-  <transition name="fade" mode="out-in">
-    <my-loader v-if="isLoading" />
-  </transition>
-  <transition name="fade" mode="out-in">
-    <my-modal />
-  </transition>
-  <transition name="fade" mode="out-in">
-    <router-view></router-view>
-  </transition>
+  <transition-group name="fade" mode="out-in">
+    <my-loader v-if="isLoading" key="loader" />
+    <my-modal key="modal" />
+    <router-view key="router" />
+  </transition-group>
 </template>
 
 <script setup>

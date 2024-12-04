@@ -1,5 +1,5 @@
 <template>
-  <button :class="colorChanger">
+  <button :class="color ? 'color' : 'white'">
     <slot></slot>
   </button>
 </template>
@@ -11,10 +11,6 @@ const props = defineProps({
   color: {
     type: Boolean,
   },
-});
-
-const colorChanger = computed(() => {
-  return props.color ? "color" : "white";
 });
 </script>
 
@@ -37,7 +33,7 @@ button {
   }
 
   @media screen and (max-width: 700px) {
-    width: 50px
+    width: 50px;
   }
 }
 

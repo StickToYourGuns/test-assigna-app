@@ -1,4 +1,5 @@
 <template>
+  <my-alert></my-alert>
   <div class="app-container">
     <my-header>
       <h1>Products</h1>
@@ -12,12 +13,13 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
-import { useDataStore } from '@/store/index';
+import { onMounted, computed } from "vue";
+import { useDataStore } from "@/store/index";
 import MyHeader from "@/components/MyHeader.vue";
 import MyFilters from "@/components/MyFilters.vue";
 import Products from "@/components/Products.vue";
 import MyPagination from "@/components/MyPagination.vue";
+import MyAlert from "@/components/UI/MyAlert.vue";
 
 const dataStore = useDataStore();
 

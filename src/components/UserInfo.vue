@@ -1,7 +1,7 @@
 <template>
   <div class="user-info">
     <div class="user-info__container">
-      <p class="user-info--profile-name">{{name}}</p>
+      <p class="user-info--profile-name">{{ name }}</p>
       <button class="user-info--button-exit" @click="logOut">Exit</button>
     </div>
     <div class="user-info__avatar">
@@ -16,16 +16,16 @@
 
 <script setup>
 import { computed } from "vue";
-import { useDataStore } from '@/store/index';
+import { useDataStore } from "@/store/index";
 
 const dataStore = useDataStore();
 
 const logOut = () => {
   dataStore.logOut();
-}
+};
 
 const name = computed(() => {
-  return localStorage.getItem('userName');
+  return localStorage.getItem("userName");
 });
 </script>
 

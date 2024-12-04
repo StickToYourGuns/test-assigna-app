@@ -1,8 +1,14 @@
 <template>
   <div class="input-container">
-    <input class="input-container--input" :id="id" :type="type" :placeholder="placeholder" :value="modelValue"
-      @input="$emit('update:modelValue', $event.target.value)" />
-    <img v-if="image" :src="imageSrc" alt="">
+    <input
+      class="input-container--input"
+      :id="id"
+      :type="type"
+      :placeholder="placeholder"
+      :value="modelValue"
+      @input="$emit('update:modelValue', $event.target.value)"
+    />
+    <img v-if="image" :src="imageSrc" alt="" />
   </div>
 </template>
 
@@ -30,23 +36,14 @@ const props = defineProps({
   },
   image: {
     type: String,
-    required: false
-  }
+    required: false,
+  },
 });
 
-const emit = defineEmits(["update:modelValue"]);
-
 const imageSrc = computed(() => {
-  switch (props.image) {
-    case 'search':
-      return searchIcon
-    case 'edit':
-      return editIcon
-    default:
-      break;
-  }
-  if (props.image === 'search') return searchIcon;
-})
+  if (props.image === "search") return searchIcon;
+  if (props.image === "edit") return editIcon;
+});
 </script>
 
 <style lang="scss" scoped>
@@ -56,6 +53,7 @@ const imageSrc = computed(() => {
   border-bottom: 1px solid $text-color;
   height: 40px;
   align-items: center;
+
   &--input {
     padding: 5px;
     height: 100%;

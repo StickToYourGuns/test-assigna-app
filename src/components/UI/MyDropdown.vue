@@ -28,7 +28,7 @@ const emit = defineEmits(["update"]);
 
 const dropdownVisible = ref(false);
 const isRotated = ref(false);
-const dropdown = ref(null)
+const dropdown = ref(null);
 
 const props = defineProps({
   values: {
@@ -54,7 +54,7 @@ const handleClickOutside = (event) => {
   if (dropdown.value && !dropdown.value.contains(event.target)) {
     dropdownVisible.value = false;
     isRotated.value = false;
-  } 
+  }
 };
 
 onMounted(() => {
@@ -100,7 +100,6 @@ onBeforeUnmount(() => {
     line-height: 1rem;
     background-color: $background-color;
     overflow: hidden;
-    // box-shadow: 4px -4px 4px 0px rgb(0 0 0 / 30%);
     border-radius: $radius-mini $radius-mini 0 0;
     &--item {
       padding: 10px 5px;
