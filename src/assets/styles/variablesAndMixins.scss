@@ -5,18 +5,17 @@
     align-items: center;
 }
 // Цвета
-
 $primary-color: #bbd0ff;
 $secondary-color: #ffd6ff;
-// $background-color: #fff7fdb9;
 $background-color: #fff7fd;
-$white-color: #fff7fd;
+$white-color: #fffdfd;
 $other-color1: #e7c6ff;
 $other-color2: #c8b6ff;
 $other-color3: #b8c0ff;
 $text-color: #333;
 
 // Отступы
+$padding-mini: 10px;
 $padding-small: 20px;
 $padding-large: 30px;
 
@@ -25,3 +24,4 @@ $radius-default: 20px;
 $radius-mini: 10px;
 $main-shadow: 4px 4px 20px rgba(0, 0, 0, 0.2);
 $mini-shadow: 4px 4px 20px 0px rgba(0, 0, 0, 0.1);
+$transition-fast: 0.3s;

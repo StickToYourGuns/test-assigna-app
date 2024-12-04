@@ -24,7 +24,7 @@ const isLoading = computed(() => dataStore.isLoading);
 <style lang="scss" scoped>
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s ease;
+  transition: opacity $transition-fast ease;
 }
 
 .fade-enter-from,

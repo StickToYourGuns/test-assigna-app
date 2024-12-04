@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ref, onMounted, computed, toRaw } from 'vue';
+import { ref, onMounted, computed, toRaw, reactive } from 'vue';
 import axiosInstance from '@/axios.js';
 import router from '../router';
 
@@ -37,10 +37,10 @@ export const useDataStore = defineStore('data', () => {
                 localStorage.setItem('userName', payload);
                 router.push('/products');
             } else {
-                error.value = response.data;
+                handleError(response.data);
             }
         } catch (err) {
-            error.value = err.message || 'Ошибка при отправке данных';
+            handleError(err.message) || 'Ошибка при отправке данных';
             console.log(err);
         } finally {
             isLoading.value = false;
@@ -62,13 +62,11 @@ export const useDataStore = defineStore('data', () => {
                 totalItems.value = response.data.total_items;
                 totalPages.value = response.data.total_pages;
                 filteredData.value = data.value;
-                console.log(response.data);
-
             } else {
-                error.value = response.data;
+                handleError(response.data);
             }
         } catch (err) {
-            error.value = err.message || 'Ошибка при отправке данных';
+            handleError(err.message) || 'Ошибка при отправке данных';
             console.log(err);
         } finally {
             isLoading.value = false;
@@ -83,10 +81,10 @@ export const useDataStore = defineStore('data', () => {
             if (response.status === 200) {
                 getProducts();
             } else {
-                error.value = response.data;
+                handleError(response.data);
             }
         } catch (err) {
-            error.value = err.message || 'Ошибка при отправке данных';
+            handleError(err.message) || 'Ошибка при отправке данных';
             console.log(err);
         } finally {
             isLoading.value = false;
@@ -101,11 +99,11 @@ export const useDataStore = defineStore('data', () => {
             if (response.status === 200) {
                 getProducts();
             } else {
-                error.value = response.data;
+                handleError(response.data);
             }
         } catch (err) {
-            error.value = err.response.data.detail[0].msg || 'Ошибка при отправке данных';
-            console.log(err);
+            handleError(err.response.data.detail[0].msg) || 'Ошибка при отправке данных';
+            console.log(error.value);
         } finally {
             isLoading.value = false;
         }
@@ -119,10 +117,10 @@ export const useDataStore = defineStore('data', () => {
             if (response.status === 200) {
                 getProducts();
             } else {
-                error.value = response.data;
+                handleError(response.data);
             }
         } catch (err) {
-            error.value = err.message || 'Ошибка при отправке данных';
+            handleError(err.message) || 'Ошибка при отправке данных';
             console.log(err);
         } finally {
             isLoading.value = false;
@@ -149,11 +147,11 @@ export const useDataStore = defineStore('data', () => {
         }
     };
 
-    const sortDirections = {
+    const sortDirections = reactive({
         name: 1,
         price: 1,
         date: 1
-    };
+    });
     const activeSort = ref(null);
 
     const setSortedData = (type) => {
@@ -184,6 +182,13 @@ export const useDataStore = defineStore('data', () => {
         }
     };
 
+    const handleError = (errorMessage) => {
+        console.log(errorMessage);
+        
+        error.value = errorMessage
+        setTimeout(() => error.value = null, 3000);
+    }
+
     return {
         data,
         filteredData,
@@ -200,9 +205,9 @@ export const useDataStore = defineStore('data', () => {
         updateProduct,
         deleteProduct,
         updatePagination,
-        // updateSearchQuery,
         setFilteredData,
         setSortedData,
+        handleError,
         activeSort,
         sortDirections
     };

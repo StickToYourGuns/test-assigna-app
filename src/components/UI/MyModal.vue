@@ -2,7 +2,7 @@
   <div class="modal" v-if="isVisible" @click="closeModal">
     <my-alert style="position: absolute; top: 0"></my-alert>
     <div @click.stop class="modal__container">
-      <component :is="modalSelect" :productObject="productObject"/>
+      <component :is="modalSelect" :productObject="productObject" />
     </div>
   </div>
 </template>
@@ -18,7 +18,7 @@ const isVisible = ref(false);
 const modalType = ref("");
 const productObject = ref("");
 
-const openModal = ({type, product}) => {
+const openModal = ({ type, product }) => {
   modalType.value = type;
   isVisible.value = true;
   productObject.value = product;
@@ -59,6 +59,7 @@ onBeforeUnmount(() => {
   background: rgba(0, 0, 0, 0.5);
   z-index: 10;
   backdrop-filter: blur(10px);
+
   &__container {
     display: flex;
     justify-content: center;
@@ -69,6 +70,11 @@ onBeforeUnmount(() => {
     padding: $padding-small;
     background-color: $background-color;
     border-radius: $radius-default;
+
+    @media screen and (max-width: 700px) {
+      width: 80%;
+      height: auto;
+    }
   }
 }
 </style>

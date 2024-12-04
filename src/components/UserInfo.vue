@@ -61,7 +61,7 @@ const name = computed(() => {
     background: none;
     border: none;
     cursor: pointer;
-    transition: .3s;
+    transition: $transition-fast;
     &:hover {
       color: $other-color2;
     }

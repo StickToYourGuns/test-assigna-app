@@ -1,6 +1,8 @@
 <template>
   <div class="app-container">
-    <my-header><h1>Products</h1></my-header>
+    <my-header>
+      <h1>Products</h1>
+    </my-header>
     <div class="products-view">
       <my-filters></my-filters>
       <products></products>
@@ -8,7 +10,7 @@
     </div>
   </div>
 </template>
-  
+
 <script setup>
 import { onMounted } from 'vue';
 import { useDataStore } from '@/store/index';
@@ -32,7 +34,6 @@ onMounted(() => {
   border-radius: $radius-default;
   display: flex;
   flex-direction: column;
-  // justify-content: space-between;
   align-items: center;
   padding: $padding-large;
   gap: 30px;
@@ -49,5 +50,14 @@ onMounted(() => {
   background-color: $white-color;
   box-shadow: $mini-shadow;
   flex-grow: 1;
+}
+
+@media screen and (max-width: 700px) {
+  .app-container {
+    width: calc(100% - 20px);
+    min-height: calc(100vh - 20px);
+    margin: 10px 0;
+    padding: $padding-mini;
+  }
 }
 </style>

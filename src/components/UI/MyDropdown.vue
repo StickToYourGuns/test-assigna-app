@@ -67,7 +67,7 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped>
 .dropdown {
-  width: 80px;
+  width: 60px;
   height: 40px;
   position: relative;
   &__title {
@@ -75,7 +75,7 @@ onBeforeUnmount(() => {
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
-    transition: 0.4s;
+    transition: $transition-fast;
     &--text {
       padding: 5px;
     }
@@ -83,7 +83,7 @@ onBeforeUnmount(() => {
       filter: brightness(0.5);
     }
     &--img {
-      transition: 0.4s;
+      transition: $transition-fast;
       &.rotated {
         transform: rotate(180deg);
       }

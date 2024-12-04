@@ -1,15 +1,7 @@
 <template>
   <div class="filters">
-    <my-input
-      style="width: 100px"
-      type="text"
-      placeholder="search..."
-      v-model="searchQuery"
-      image = 'search'
-    ></my-input>
-    <my-button color @click="openModal('createProduct', null)"
-      >Create</my-button
-    >
+    <my-input style="width: 100px" type="text" placeholder="search..." v-model="searchQuery" image='search'></my-input>
+    <my-button color @click="openModal('createProduct', null)">Create</my-button>
   </div>
 </template>
 
@@ -50,5 +42,9 @@ const openModal = (type) => {
   background-color: $white-color;
   border-radius: $radius-mini;
   box-shadow: $mini-shadow;
+
+  @media screen and (max-width: 700px) {
+    padding: $padding-mini;
+  }
 }
 </style>

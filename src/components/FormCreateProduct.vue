@@ -54,7 +54,6 @@ const closeModal = () => {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  background-color: $white-color;
   border-radius: $radius-mini;
   padding: $padding-small;
   gap: 10px;
