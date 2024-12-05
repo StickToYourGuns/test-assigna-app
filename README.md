@@ -60,7 +60,7 @@ SCSS
 
 
 
-# Если вы не из англии
+# Если вы не из Англии
 
 ## Возможности
 
@@ -84,5 +84,6 @@ SCSS
 
 git clone https://github.com/yourusername/assigna.git
 cd assigna
+
 npm install
 npm run dev

@@ -34,7 +34,6 @@ export const useDataStore = defineStore('data', () => {
             }
         } catch (err) {
             handleError(err.message);
-            console.log(err);
         } finally {
             isLoading.value = false;
         }
@@ -63,16 +62,12 @@ export const useDataStore = defineStore('data', () => {
                 totalItems.value = response.data.total_items;
                 totalPages.value = response.data.total_pages;
                 filteredData.value = data.value;
-                console.log(data.value);
-
             } else {
                 handleError(response.data);
             }
         } catch (err) {
             handleError(err.message);
-            console.log(err);
         } finally {
-            console.log('sended', { headers, params });
             isLoading.value = false;
         }
     };
@@ -108,7 +103,6 @@ export const useDataStore = defineStore('data', () => {
             }
         } catch (err) {
             handleError(err.response.data.detail[0].msg);
-            console.log(error.value);
         } finally {
             isLoading.value = false;
         }
@@ -126,8 +120,7 @@ export const useDataStore = defineStore('data', () => {
                 handleError(response.data);
             }
         } catch (err) {
-            handleError(err.message) || 'Ошибка при отправке данных';
-            console.log(err);
+            handleError(err.response.data.detail[0].msg);
         } finally {
             isLoading.value = false;
         }
